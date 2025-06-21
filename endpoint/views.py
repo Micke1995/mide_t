@@ -163,3 +163,5 @@ def get_lecturas(request):
             latest_lecturas[nombre_fase] = None
 
     return JsonResponse({"datos": latest_lecturas}, status=200)
+
+
