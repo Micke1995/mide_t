@@ -6,8 +6,10 @@ from django.views.decorators.http import require_http_methods
 from .models import *
 import datetime
 from django.utils.timezone import make_aware
+import pandas as pd
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
+
 
 
 @csrf_exempt
@@ -164,4 +166,34 @@ def get_lecturas(request):
 
     return JsonResponse({"datos": latest_lecturas}, status=200)
 
+
+@csrf_exempt
+@require_http_methods(["GET"]) 
+def get_lecturas_historia(request):
+
+    sis_name = request.GET.get('sistema')
+    sistema = SistemaMedicion.objects.get(nombre=sis_name) 
+
+    fases = ['A', 'B', 'C', 'N']
+    lecturas_historial = {}
+
+    for nombre_fase in fases:
+        lecturas_historial[nombre_fase] = []
+        try:
+            fase_obj = Fase.objects.get(Sistema=sistema, nombre=nombre_fase)
+            lecturas = Lecturas.objects.filter(fase=fase_obj).order_by('-tiempo').all()
+
+            for lectura in lecturas:
+                if lectura:
+                    lecturas_historial[nombre_fase] += [{
+                        "voltaje": lectura.voltaje,
+                        "corriente": lectura.corriente,
+                        "angulo": lectura.angulo,
+                        "kwh": lectura.kwh,
+                        "tiempo": lectura.tiempo,
+                    }]
+        except Fase.DoesNotExist:
+            lecturas_historial= []
+    # lecturas_historial = json.dumps(lecturas_historial)
+    return JsonResponse({"datos": lecturas_historial}, status=200)
 
