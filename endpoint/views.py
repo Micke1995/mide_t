@@ -197,3 +197,30 @@ def get_lecturas_historia(request):
     # lecturas_historial = json.dumps(lecturas_historial)
     return JsonResponse({"datos": lecturas_historial}, status=200)
 
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def cambia_descripcion(request):
+    try:
+        data = json.loads(request.body)
+        sis_name = data.get('sistema',"Zona Morelia Centro")
+        descripcio_nueva = data.get('descripcion',"Sin Descripcion")
+
+
+        try:
+            sistema = SistemaMedicion.objects.get(nombre=sis_name)
+            sistema.descripcion = descripcio_nueva
+            sistema.save()
+        except SistemaMedicion.DoesNotExist:
+            return JsonResponse({"error": f"Sistema '{sis_name}' no encontrado"}, status=404)
+        
+
+        return JsonResponse({
+            "mensaje": f"Se cambio la descripcion  del sistema '{sis_name}' de manera correcta."
+        }, status=201)
+
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "JSON inválido"}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": f"Error interno: {str(e)}"}, status=500)
+
