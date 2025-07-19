@@ -73,6 +73,11 @@
         </table>
       </div>
     </div>
+    <div id="container" class="my-5"></div>
+
+    <div id="grafica-a"></div>
+    <div id="grafica-b"></div>
+    <div id="grafica-c"></div>
 
     <footer class="mt-5 text-center text-muted">
       <small>Monitoreo de parámetros eléctricos en transformadores </small>
@@ -80,11 +85,16 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/data.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <!-- <script src="https://code.highcharts.com/themes/adaptive.js"></script> -->
 
 
   <script>
-    function fetchLiveData() {
+    function fetchLiveData1() {
       fetch('/api/get_lecturas/?sistema={{ sistema.nombre }}')
         .then(response => response.json())
         .then(data => {
@@ -116,8 +126,199 @@
 
     }
 
-    setInterval(fetchLiveData, 10000);
+    setInterval(fetchLiveData1, 10000);
+    fetchLiveData1();
+
+
+
+    // function createChart() {
+    //   Highcharts.chart('container', {
+
+    //     title: {
+    //       text: 'Fase A',
+    //       align: 'center'
+    //     },
+    //     legend: {
+    //       layout: 'vertical',
+    //       align: 'right',
+    //       verticalAlign: 'middle'
+    //     },
+
+    //     series: [{
+    //       name: 'VA',
+    //       data: VA
+    //     },
+    //     {
+    //       name: 'IA',
+    //       data: VA
+    //     },
+    //     {
+    //       name: 'FP',
+    //       data: VA
+    //     },
+    //     {
+    //       name: 'kW',
+    //       data: VA
+    //     }],
+
+    //     responsive: {
+    //       rules: [{
+    //         condition: {
+    //           maxWidth: 500
+    //         },
+    //         chartOptions: {
+    //           legend: {
+    //             layout: 'horizontal',
+    //             align: 'center',
+    //             verticalAlign: 'bottom'
+    //           }
+    //         }
+    //       }]
+    //     }
+
+    //   });
+
+
+    // }
+
+    // // urlInput = defaultData;
+
+    // // We recreate instead of using chart update to make sure the loaded CSV
+    // // and such is completely gone.
+    // // pollingCheckbox.onchange = urlInput.onchange =
+    // // pollingInput.onchange = createChart;
+
+    // // Create the chart
+    // createChart();
+
+    let chartA, chartB, chartC;
+
+    function calcularKW(v, i, angulo) {
+      return (v * i * Math.cos(angulo * Math.PI / 180)) / 1000;
+    }
+
+    function procesarDatos(datosFase) {
+      const tiempos = [];
+      const voltajes = [];
+      const corrientes = [];
+      const angulos = [];
+      const kw = [];
+
+      for (const item of datosFase.reverse()) {
+        const t = new Date(item.tiempo).toLocaleString();
+        tiempos.push(t);
+        voltajes.push(item.voltaje);
+        corrientes.push(item.corriente);
+        angulos.push(item.angulo);
+        kw.push(item.kwh);
+        // kw.push(calcularKW(item.voltaje, item.corriente, item.angulo));
+      }
+
+      return { tiempos, voltajes, corrientes, angulos, kw };
+    }
+
+    function actualizarGrafica(chart, datos, fase) {
+      chart.update({
+        chart: {
+          zooming: {
+            type: 'x'
+          }
+        },
+        title: { text: `Fase ${fase}` },
+        xAxis: { categories: datos.tiempos, type: 'datetime' },
+        yAxis: [
+          {
+            labels: {
+              format: '{value} V',
+              // style: { color: '#1f77b4' }
+            },
+            opposite: true,
+          },
+          {
+            labels: {
+              format: '{value} A',
+              // style: { color: '#ff7f0e' }
+            },
+            opposite: true,
+          },
+          {
+            labels: {
+              format: '{value} °',
+              // style: { color: '#2ca02c' }
+            },
+            opposite: true,
+          },
+          {
+            labels: {
+              format: '{value} kW',
+              // style: { color: ' #d62728' }
+            },
+            opposite: true,
+          }
+
+        ],
+        series: [
+          { name: 'Voltaje (V)', data: datos.voltajes,
+           yAxis: 0
+          },
+          { name: 'Corriente (A)', data: datos.corrientes,
+          // yAxis: 1
+        },
+          { name: 'Ángulo (°)', data: datos.angulos,
+          // yAxis: 2
+        },
+          { name: 'Potencia (kW)', data: datos.kw,
+          // yAxis: 3
+        }
+        ]
+      });
+    }
+
+    function crearGrafica(contenedor, titulo) {
+      return Highcharts.chart(contenedor, {
+        chart: { type: 'spline' },
+        title: { text: titulo },
+        xAxis: { categories: [] },
+        yAxis: { title: { text: 'Valor' } },
+        series: [
+          { name: 'Voltaje (V)', data: [] },
+          { name: 'Corriente (A)', data: [] },
+          { name: 'Ángulo (°)', data: [] },
+          { name: 'Potencia (kW)', data: [] }
+        ]
+      });
+    }
+
+    function fetchLiveData() {
+      fetch('/api/get_lecturas_historia/?sistema={{ sistema.nombre }}')
+        .then(response => response.json())
+        .then(data => {
+          const datos = data.datos;
+
+          if (datos['A']) {
+            const datosA = procesarDatos(datos['A']);
+            actualizarGrafica(chartA, datosA, 'A');
+          }
+          if (datos['B']) {
+            const datosB = procesarDatos(datos['B']);
+            actualizarGrafica(chartB, datosB, 'B');
+          }
+          if (datos['C']) {
+            const datosC = procesarDatos(datos['C']);
+            actualizarGrafica(chartC, datosC, 'C');
+          }
+        })
+        .catch(error => console.error('Fetch error:', error));
+    }
+
+    // Inicializar las gráficas vacías
+    chartA = crearGrafica('grafica-a', 'Fase A');
+    chartB = crearGrafica('grafica-b', 'Fase B');
+    chartC = crearGrafica('grafica-c', 'Fase C');
+
+    // Llamadas periódicas
     fetchLiveData();
+    setInterval(fetchLiveData, 10000);
   </script>
 </body>
 
