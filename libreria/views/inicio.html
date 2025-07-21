@@ -14,22 +14,32 @@
     <h1 class="mb-4 text-center">🔧 Tablero de Monitoreo</h1>
 
     <div class="card mb-4">
-      <div class="card-header bg-success text-white">
+      <div class="card-header bg-success text-white text-center fs-4">
         Información del Servicio
       </div>
       <div class="card-body">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><strong>Nombre del Servicio:</strong> {{ sistema.nombre }}</li>
-          <li class="list-group-item"><strong>Dirección:</strong> {{ sistema.ubicacion }}</li>
-          <li class="list-group-item"><strong>Descripción:</strong> {{ sistema.descripcion }}</li>
-          <li class="list-group-item"><strong>Latitud:</strong> {{ sistema.latitud }}</li>
-          <li class="list-group-item"><strong>Longitud:</strong> {{ sistema.longitud }}</li>
-        </ul>
+        <div class="row">
+          <ul class="list-group list-group-flush col-md-6">
+            <li class="list-group-item"><strong>Nombre del Servicio:</strong> {{ sistema.nombre }}</li>
+            <li class="list-group-item"><strong>Dirección:</strong> {{ sistema.ubicacion }}</li>
+            <li class="list-group-item"><strong>Descripción:</strong> {{ sistema.descripcion }}</li>
+            <li class="list-group-item"><strong>Latitud:</strong> {{ sistema.latitud }}</li>
+            <li class="list-group-item"><strong>Longitud:</strong> {{ sistema.longitud }}</li>
+          </ul>
+          <div class="col-md-6">
+            <div style="height: 100%; min-height: 100px; display: flex; flex-direction: column;">
+              <iframe id="gmap_canvas" style="width: 100%; height: 100%; flex: 1 1 auto; border:0;"
+                src="https://maps.google.com/maps?q={{sistema.latitud}},{{sistema.longitud}}&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+              </iframe>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header bg-success text-white text-center">
+      <div class="card-header bg-success text-white text-center fs-4">
         Datos en Tiempo Real
       </div>
       <div class="card-body p-0">
@@ -41,7 +51,7 @@
               <th>Corriente (A)</th>
               <th>Factor de Potencia</th>
               <th>Potencia (kW)</th>
-              <th>Marcad de Tiempo</th>
+              <th>Marca de Tiempo</th>
             </tr>
           </thead>
           <tbody>
@@ -73,19 +83,24 @@
         </table>
       </div>
     </div>
-    <div id="container" class="my-5"></div>
-
-    <div id="grafica-a"></div>
-    <div id="grafica-b"></div>
-    <div id="grafica-c"></div>
+    <div id="container" class="card mt-4">
+      <div class="card-header bg-success text-white text-center fs-4">Serie temporal. </div>
+      <div class="card-body">
+        <div id="grafica-a"></div>
+        <div id="grafica-b"></div>
+        <div id="grafica-c"></div>
+      </div>
+    </div>
 
     <footer class="mt-5 text-center text-muted">
-      <small>Monitoreo de parámetros eléctricos en transformadores </small>
+      <small>LADETEC 2025 </small>
     </footer>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.highcharts.com/highcharts.js"></script>
+  <!-- <script src="https://code.highcharts.com/stock/highstock.js"></script> -->
+
   <script src="https://code.highcharts.com/modules/data.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/modules/export-data.js"></script>
@@ -226,26 +241,99 @@
         },
         title: { text: `Fase ${fase}` },
         xAxis: { categories: datos.tiempos, type: 'datetime' },
+        // yAxis: [
+        //   {
+        //     labels: {
+        //       format: '{value} V',
+        //       // style: { color: '#1f77b4' }
+        //     },
+        //     opposite: true,
+        //   },
+        //   {
+        //     labels: {
+        //       format: '{value} A',
+        //       // style: { color: '#ff7f0e' }
+        //     },
+        //     opposite: true,
+        //   },
+        //   {
+        //     labels: {
+        //       format: '{value}',
+        //       // style: { color: '#2ca02c' }
+        //     },
+        //     title: { text: 'Factor de Potencia' },
+        //     opposite: true,
+        //   },
+        //   {
+        //     labels: {
+        //       format: '{value} kW',
+        //       // style: { color: ' #d62728' }
+        //     },
+        //     opposite: true,
+        //   }
+
+        // ],
+        series: [
+          {
+            name: 'Voltaje (V)', data: datos.voltajes,
+            yAxis: 0,
+            marker: { enabled: false }
+          },
+          {
+            name: 'Corriente (A)', data: datos.corrientes,
+
+            marker: { enabled: false },
+            yAxis: 1
+          },
+          {
+            name: 'FP', data: datos.angulos,
+
+            marker: { enabled: false },
+            yAxis: 2
+          },
+          {
+            name: 'Potencia (kW)', data: datos.kw,
+            marker: { enabled: false },
+            yAxis: 3
+          }
+        ]
+      });
+    }
+
+    function crearGrafica(contenedor, titulo) {
+      // return Highcharts.stockChart(contenedor, {
+      return Highcharts.chart(contenedor, {
+        lang: {
+          thousandsSep: ','
+        },
+        chart: { type: 'spline' },
+        title: { text: titulo },
+        xAxis: { categories: [] },
         yAxis: [
           {
             labels: {
               format: '{value} V',
               // style: { color: '#1f77b4' }
             },
-            opposite: true,
+            title: { text: 'Voltaje' },
+            opposite: false,
           },
           {
             labels: {
               format: '{value} A',
               // style: { color: '#ff7f0e' }
             },
+            title: { text: 'Corriente' },
             opposite: true,
           },
           {
+            max: 1,
+            min: -1,
             labels: {
-              format: '{value} °',
+              format: '{value}',
               // style: { color: '#2ca02c' }
             },
+            title: { text: 'Factor de Potencia' },
             opposite: true,
           },
           {
@@ -253,33 +341,12 @@
               format: '{value} kW',
               // style: { color: ' #d62728' }
             },
+            title: { text: 'Potencia' },
             opposite: true,
           }
 
-        ],
-        series: [
-          { name: 'Voltaje (V)', data: datos.voltajes,
-           yAxis: 0
-          },
-          { name: 'Corriente (A)', data: datos.corrientes,
-          // yAxis: 1
-        },
-          { name: 'Ángulo (°)', data: datos.angulos,
-          // yAxis: 2
-        },
-          { name: 'Potencia (kW)', data: datos.kw,
-          // yAxis: 3
-        }
         ]
-      });
-    }
-
-    function crearGrafica(contenedor, titulo) {
-      return Highcharts.chart(contenedor, {
-        chart: { type: 'spline' },
-        title: { text: titulo },
-        xAxis: { categories: [] },
-        yAxis: { title: { text: 'Valor' } },
+        ,
         series: [
           { name: 'Voltaje (V)', data: [] },
           { name: 'Corriente (A)', data: [] },
