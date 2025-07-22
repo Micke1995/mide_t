@@ -33,7 +33,7 @@
             <li class="list-group-item"><strong>Longitud:</strong> {{ sistema.longitud }}</li>
           </ul>
           <div class="col-md-6">
-            <div id="map" ></div>
+            <div id="map"></div>
           </div>
         </div>
       </div>
@@ -99,13 +99,13 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://code.highcharts.com/highcharts.js"></script>
   <!-- <script src="https://code.highcharts.com/stock/highstock.js"></script> -->
 
-  <script src="https://code.highcharts.com/modules/data.js"></script>
-  <script src="https://code.highcharts.com/modules/exporting.js"></script>
-  <script src="https://code.highcharts.com/modules/export-data.js"></script>
-  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <script src="{% static 'js/highcharts/highstock.js'%}"></script>
+  <!-- <script src="{% static 'js/highcharts/data.js' %} "></script> -->
+  <!-- <script src="{% static 'js/highcharts/exporting.js' %}"></script> -->
+  <!-- <script src="{% static 'js/highcharts/export-data.js' %}"></script> -->
+  <!-- <script src="{% static 'js/highcharts/accessibility.js' %} "></script> -->
   <!-- <script src="https://code.highcharts.com/themes/adaptive.js"></script> -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
