@@ -1,0 +1,17 @@
+[Unit]
+Description=Gunicorn instance to serve application
+After=network.target
+
+[Service]
+User=inovacioncfelaboratorio
+Group=www-data
+WorkingDirectory=/home/inovacioncfelaboratorio/mide_t
+Environment="PATH=/home/inovacioncfelaboratorio/mide_t/bin"
+ExecStart=/home/inovacioncfelaboratorio/mide_t/bin/gunicorn \
+    --access-logfile - \
+    --workers 3 \
+    --bind unix:/home/inovacioncfelaboratorio/mide_t/gunicorn.sock \
+    Sistema.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+server {
+  listen 80;
+  server_name 34.136.90.40;
+
+  location = /favicon.ico { access_log off; log_not_found off; }
+  location /static/ {
+    root /home/inovacioncfelaboratorio/mide_t;
+  }
+  location / {
+    include proxy_params;
+    proxy_pass http://unix:/home/inovacioncfelaboratorio/mide_t/gunicorn.sock;
+  }
+}
