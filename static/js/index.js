@@ -26,21 +26,21 @@ function fetchLiveData1() {
         document.getElementById('current a').textContent = datos['A'].corriente;
         document.getElementById('angle a').textContent = datos['A'].angulo;
         document.getElementById('power a').textContent = datos['A'].kwh;
-        document.getElementById('last_lec a').textContent = datos['A'].tiempo;
+        document.getElementById('last_lec a').textContent = new Date(datos['A'].tiempo).toLocaleString()
       }
       if (datos['B']) {
         document.getElementById('voltage b').textContent = datos['B'].voltaje;
         document.getElementById('current b').textContent = datos['B'].corriente;
         document.getElementById('angle b').textContent = datos['B'].angulo;
         document.getElementById('power b').textContent = datos['B'].kwh;
-        document.getElementById('last_lec b').textContent = datos['B'].tiempo;
+        document.getElementById('last_lec b').textContent = new Date(datos['B'].tiempo).toLocaleString();
       }
       if (datos['C']) {
         document.getElementById('voltage c').textContent = datos['C'].voltaje;
         document.getElementById('current c').textContent = datos['C'].corriente;
         document.getElementById('angle c').textContent = datos['C'].angulo;
         document.getElementById('power c').textContent = datos['C'].kwh;
-        document.getElementById('last_lec c').textContent = datos['C'].tiempo;
+        document.getElementById('last_lec c').textContent = new Date(datos['C'].tiempo).toLocaleString();
 
       }
     })
