@@ -1,11 +1,11 @@
 var map = L.map('map').setView([lat, long], 16);
 // L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-var greenIcon= new L.icon({
+var greenIcon = new L.icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [25, 41],
@@ -13,7 +13,7 @@ var greenIcon= new L.icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 })
-var marker = L.marker([lat, long], {icon: greenIcon}).addTo(map);
+var marker = L.marker([lat, long], { icon: greenIcon }).addTo(map);
 
 
 function fetchLiveData1() {
@@ -58,145 +58,103 @@ function calcularKW(v, i, angulo) {
 }
 
 function procesarDatos(datosFase) {
-  const tiempos = [];
-  const voltajes = [];
-  const corrientes = [];
-  const angulos = [];
-  const kw = [];
+  const seriesVoltajes = [];
+  const seriesCorrientes = [];
+  const seriesAngulos = [];
+  const seriesKW = [];
 
   for (const item of datosFase.reverse()) {
-    const t = new Date(item.tiempo).toLocaleString();
-    tiempos.push(t);
-    voltajes.push(item.voltaje);
-    corrientes.push(item.corriente);
-    angulos.push(item.angulo);
-    kw.push(item.kwh);
-    // kw.push(calcularKW(item.voltaje, item.corriente, item.angulo));
+    const t = new Date(item.tiempo).getTime(); // TIMESTAMP para Highstock
+    // const t = item.tiempo
+    seriesVoltajes.push([t, item.voltaje]);
+    seriesCorrientes.push([t, item.corriente]);
+    seriesAngulos.push([t, item.angulo]);
+    seriesKW.push([t, item.kwh]);
+    // seriesKW.push([t, calcularKW(item.voltaje, item.corriente, item.angulo)]);
   }
 
-  return { tiempos, voltajes, corrientes, angulos, kw };
+  return { seriesVoltajes, seriesCorrientes, seriesAngulos, seriesKW };
 }
 
 function actualizarGrafica(chart, datos, fase) {
+
+  console.log(datos.seriesVoltajes)
   chart.update({
-    chart: {
-      zooming: {
-        type: 'x'
-      }
-    },
     title: { text: `Fase ${fase}` },
-    xAxis: { categories: datos.tiempos, type: 'datetime' },
-    // yAxis: [
-    //   {
-    //     labels: {
-    //       format: '{value} V',
-    //       // style: { color: '#1f77b4' }
-    //     },
-    //     opposite: true,
-    //   },
-    //   {
-    //     labels: {
-    //       format: '{value} A',
-    //       // style: { color: '#ff7f0e' }
-    //     },
-    //     opposite: true,
-    //   },
-    //   {
-    //     labels: {
-    //       format: '{value}',
-    //       // style: { color: '#2ca02c' }
-    //     },
-    //     title: { text: 'Factor de Potencia' },
-    //     opposite: true,
-    //   },
-    //   {
-    //     labels: {
-    //       format: '{value} kW',
-    //       // style: { color: ' #d62728' }
-    //     },
-    //     opposite: true,
-    //   }
-
-    // ],
     series: [
-      {
-        name: 'Voltaje (V)', data: datos.voltajes,
-        yAxis: 0,
-        marker: { enabled: false }
-      },
-      {
-        name: 'Corriente (A)', data: datos.corrientes,
-
-        marker: { enabled: false },
-        yAxis: 1
-      },
-      {
-        name: 'FP', data: datos.angulos,
-
-        marker: { enabled: false },
-        yAxis: 2
-      },
-      {
-        name: 'Potencia (kW)', data: datos.kw,
-        marker: { enabled: false },
-        yAxis: 3
-      }
+      { name: 'Voltaje (V)', data: datos.seriesVoltajes },
+      { name: 'Corriente (A)', data: datos.seriesCorrientes },
+      { name: 'FP', data: datos.seriesAngulos },
+      { name: 'Potencia (W)', data: datos.seriesKW }
     ]
   });
+
+  // Enfocar al último día
+  if (datos.seriesVoltajes.length > 0) {
+    const ultimoTimestamp = datos.seriesVoltajes[datos.seriesVoltajes.length - 1][0];
+    const primerTimestamp = ultimoTimestamp - 1 * 3600 * 1000; // 1h antes
+    chart.xAxis[0].setExtremes(primerTimestamp, ultimoTimestamp);
+  }
 }
 
 function crearGrafica(contenedor, titulo) {
-  // return Highcharts.stockChart(contenedor, {
-  return Highcharts.chart(contenedor, {
-    lang: {
-      thousandsSep: ','
+
+  Highcharts.setOptions({
+    time: {
+      useUTC: false
+    }
+  });
+
+  return Highcharts.stockChart(contenedor, {
+    lang: { thousandsSep: ',' },
+    chart: {
+      type: 'spline',
+      zooming: { type: 'x' }
+
     },
-    chart: { type: 'spline' },
     title: { text: titulo },
-    xAxis: { categories: [] },
+    credits: {
+      enabled: false
+    },
+    rangeSelector: {
+      buttons: [
+        { type: 'hour', count: 1, text: '1h' },
+        { type: 'day', count: 1, text: '1d' },
+        { type: 'all', text: 'Todo' }
+      ],
+      // selected: 0
+    },
+    xAxis: {
+      type: "datetime"
+    },
     yAxis: [
       {
-        labels: {
-          format: '{value} V',
-          // style: { color: '#1f77b4' }
-        },
+        labels: { format: '{value} V' },
         title: { text: 'Voltaje' },
-        opposite: false,
+        opposite: false
       },
       {
-        labels: {
-          format: '{value} A',
-          // style: { color: '#ff7f0e' }
-        },
+        labels: { format: '{value} A' },
         title: { text: 'Corriente' },
-        opposite: true,
+        opposite: false
       },
       {
-        max: 1,
-        min: -1,
-        labels: {
-          format: '{value}',
-          // style: { color: '#2ca02c' }
-        },
+        max: 1, min: -1,
+        labels: { format: '{value}' },
         title: { text: 'Factor de Potencia' },
-        opposite: true,
+        opposite: true
       },
       {
-        labels: {
-          format: '{value} kW',
-          // style: { color: ' #d62728' }
-        },
+        labels: { format: '{value} W' },
         title: { text: 'Potencia' },
-        opposite: true,
+        opposite: true
       }
-
-    ]
-    ,
+    ],
     series: [
-      { name: 'Voltaje (V)', data: [] },
-      { name: 'Corriente (A)', data: [] },
-      { name: 'Ángulo (°)', data: [] },
-      { name: 'Potencia (kW)', data: [] }
+      { name: 'Voltaje (V)', data: [], yAxis: 0 },
+      { name: 'Corriente (A)', data: [], yAxis: 1 },
+      { name: 'FP', data: [], yAxis: 2 },
+      { name: 'Potencia (W)', data: [], yAxis: 3 }
     ]
   });
 }
