@@ -1,5 +1,6 @@
-asgiref 
+asgiref
 conda-pack==0.8.1
-Django  
-sqlparse  
-typing_extensions 
+Django
+sqlparse
+typing_extensions
+pandas

@@ -10,3 +10,6 @@ sudo systemctl status nginx
 
 sudo systemctl restart gunicorn
 sudo systemctl status gunicorn
+
+## Configuracion de IIS
+https://adrianjnkns.medium.com/django-on-iis-b33574dbd510
