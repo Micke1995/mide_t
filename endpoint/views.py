@@ -25,7 +25,7 @@ def recibe_datos_medicion(request):
         }, status=200)
     except json.JSONDecodeError:
         return JsonResponse({"error": "JSON inválido"}, status=400)
-    
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -34,7 +34,7 @@ def crea_Sistema_medicion(request):
         data = json.loads(request.body)
 
         nombre = data.get('nombre')
-        lugar = data.get('lugar', '')  
+        lugar = data.get('lugar', '')
         descripcion = data.get('descripcion', '')
         latitud = data.get('latitud')
         longitud = data.get('longitud')
@@ -67,7 +67,7 @@ def crea_Sistema_medicion(request):
         return JsonResponse({"error": "JSON inválido."}, status=400)
     except Exception as e:
         return JsonResponse({"error": f"Error interno: {str(e)}"}, status=500)
-    
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def crea_fase_sistema_med(request):
@@ -100,7 +100,7 @@ def crea_fase_sistema_med(request):
         return JsonResponse({"error": "JSON inválido"}, status=400)
     except Exception as e:
         return JsonResponse({"error": f"Error interno: {str(e)}"}, status=500)
-    
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -118,7 +118,7 @@ def lectura_nueva(request):
             sistema = SistemaMedicion.objects.get(nombre=sis_name)
         except SistemaMedicion.DoesNotExist:
             return JsonResponse({"error": f"Sistema '{sis_name}' no encontrado"}, status=404)
-        
+
         fase_obj = Fase.objects.get_or_create(Sistema=sistema, nombre=fase)[0]
 
         tiempo = make_aware(datetime.datetime.now())
@@ -140,11 +140,11 @@ def lectura_nueva(request):
         return JsonResponse({"error": f"Error interno: {str(e)}"}, status=500)
 
 @csrf_exempt
-@require_http_methods(["GET"]) 
+@require_http_methods(["GET"])
 def get_lecturas(request):
 
     sis_name = request.GET.get('sistema')
-    sistema = SistemaMedicion.objects.get(nombre=sis_name) 
+    sistema = SistemaMedicion.objects.get(nombre=sis_name)
 
     fases = ['A', 'B', 'C', 'N']
     latest_lecturas = {}
@@ -168,11 +168,11 @@ def get_lecturas(request):
 
 
 @csrf_exempt
-@require_http_methods(["GET"]) 
+@require_http_methods(["GET"])
 def get_lecturas_historia(request):
 
     sis_name = request.GET.get('sistema')
-    sistema = SistemaMedicion.objects.get(nombre=sis_name) 
+    sistema = SistemaMedicion.objects.get(nombre=sis_name)
 
     fases = ['A', 'B', 'C', 'N']
     lecturas_historial = {}
@@ -213,7 +213,7 @@ def cambia_descripcion(request):
             sistema.save()
         except SistemaMedicion.DoesNotExist:
             return JsonResponse({"error": f"Sistema '{sis_name}' no encontrado"}, status=404)
-        
+
 
         return JsonResponse({
             "mensaje": f"Se cambio la descripcion  del sistema '{sis_name}' de manera correcta."
@@ -223,4 +223,14 @@ def cambia_descripcion(request):
         return JsonResponse({"error": "JSON inválido"}, status=400)
     except Exception as e:
         return JsonResponse({"error": f"Error interno: {str(e)}"}, status=500)
+
+
+@require_http_methods(["GET"])
+def get_servicios(request):
+    sistemas = list(SistemaMedicion.objects.all().values_list('nombre'))
+
+    if sistemas:
+        return JsonResponse({"mensaje":f'Se realiza la consulta de forma adecuada',"data":sistemas},status=200)
+    else:
+        return JsonResponse({"mensaje":f'No se encontraron servicios',"data":sistemas},status=200)
 
