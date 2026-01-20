@@ -17,7 +17,27 @@
 <body class="bg-light">
 
   <div class="container py-4">
-    <h1 class="mb-4 text-center">🔧 Tablero de Monitoreo</h1>
+
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white text-center fs-4">
+        Consultar Servicios
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col-md-6">
+            <label for="selectorServicios" class="form-label">Listado de servicios</label>
+            <select class="form-select" name="selectorServicios" id="selectorServicios">
+              <option value="" disabled selected>Seleccione una opción</option>
+            </select>
+          </div>
+          <div class="col-md-6 d-flex align-items-end">
+            <button class="btn btn-success w-100" id="ConsultaBtn"> Consultar </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <div class="card mb-4">
       <div class="card-header bg-success text-white text-center fs-4">
@@ -31,6 +51,8 @@
             <li class="list-group-item"><strong>Descripción:</strong> {{ sistema.descripcion }}</li>
             <li class="list-group-item"><strong>Latitud:</strong> {{ sistema.latitud }}</li>
             <li class="list-group-item"><strong>Longitud:</strong> {{ sistema.longitud }}</li>
+            <li class="list-group-item"><strong>Capacidad:</strong> --- </li>
+            <li class="list-group-item"><strong>Numero Económico:</strong> --- </li>
           </ul>
           <div class="col-md-6">
             <div id="map"></div>
@@ -57,7 +79,15 @@
           </thead>
           <tbody>
             <tr>
-              <td>A</td>
+              <td>
+                <p class="position-relative">A
+                  <small id="notiA"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">!
+
+                </small>
+
+                </p>
+              </td>
               <td><span id="voltage a">--</span></td>
               <td><span id="current a">--</span></td>
               <td><span id="angle a">--</span></td>
@@ -65,7 +95,13 @@
               <td><span id="last_lec a">--</span></td>
             </tr>
             <tr>
-              <td>B</td>
+              <td>
+                <p class="position-relative">B
+                  <span id="notiB"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">!
+                  </span>
+                </p>
+              </td>
               <td><span id="voltage b">--</span></td>
               <td><span id="current b">--</span></td>
               <td><span id="angle b">--</span></td>
@@ -73,7 +109,13 @@
               <td><span id="last_lec b">--</span></td>
             </tr>
             <tr>
-              <td>C</td>
+              <td>
+                <p class="position-relative">C
+                  <span id="notiC"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">!
+                  </span>
+                </p>
+              </td>
               <td><span id="voltage c">--</span></td>
               <td><span id="current c">--</span></td>
               <td><span id="angle c">--</span></td>
@@ -94,7 +136,7 @@
     </div>
 
     <footer class="mt-5 text-center text-muted">
-      <small>LADETEC 2025 </small>
+      <small>LADETEC 2026 </small>
     </footer>
   </div>
 
@@ -112,7 +154,7 @@
   <script>
     const lat = parseFloat("{{ sistema.latitud }}");
     const long = parseFloat("{{ sistema.longitud }}");
-    const nombre = "{{ sistema.nombre }}";
+    let nombre = "{{ sistema.nombre }}";
 
   </script>
   <script src="{% static 'js/index.js' %}"></script>
