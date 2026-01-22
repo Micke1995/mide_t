@@ -17,6 +17,7 @@ var marker = L.marker([lat, long], { icon: greenIcon }).addTo(map);
 
 
 let chartA, chartB, chartC;
+let lastDate = { "A": null, "B": null, "C": null };
 function calcularKW(v, i, angulo) {
   return (v * i * Math.cos(angulo * Math.PI / 180)) / 1000;
 }
@@ -47,10 +48,11 @@ function actualizarGrafica(chart, datos, fase) {
   const fechaString = new Date(datos.tiempo).toLocaleString();
 
   // comentar para producción
-  datos.voltaje = 130 * Math.random().toFixed(2)
-  datos.corriente = 10 * Math.random().toFixed(2)
-  datos.angulo = 30 * Math.random().toFixed(2)
-  datos.kwh = 100 * Math.random().toFixed(2)
+  // datos.voltaje = 130 * Math.random().toFixed(2)
+  // datos.corriente = 10 * Math.random().toFixed(2)
+  // datos.angulo = 30 * Math.random().toFixed(2)
+  // datos.kwh = 100 * Math.random().toFixed(2)
+
   const noti = document.getElementById(`noti${fase}`);
   noti.classList.add('d-none');
 
@@ -86,14 +88,19 @@ function actualizarGrafica(chart, datos, fase) {
 
 
     noti.classList.remove('d-none');
-    // agregar bandera en la gráfica
-    chart.series[4].addPoint([new Date().getTime(), datos.voltaje], false, false);
+    // agregar bandera en la gráfica solo si el timestamp es mayor al último registrado
+    if (new Date(datos.tiempo).getTime() > lastDate[fase]) {
+      chart.series[4].addPoint([new Date(datos.tiempo).getTime(), datos.voltaje], false, false);
+      lastDate[fase] = new Date(datos.tiempo).getTime();
+
+      datos.tiempo = new Date(datos.tiempo).getTime();
+    }
   }
 
 
 
-  // datos.tiempo = new Date(datos.tiempo).getTime();
-  datos.tiempo = new Date().getTime();
+  datos.tiempo = new Date(datos.tiempo).getTime();
+  // datos.tiempo = new Date().getTime();
 
   chart.series[0].addPoint([datos.tiempo, datos.voltaje], false, false);
   chart.series[1].addPoint([datos.tiempo, datos.corriente], false, false);
@@ -234,6 +241,7 @@ function fetchLiveData() {
     .then(response => response.json())
     .then(data => {
       const datos = data.datos;
+      console.log('Datos recibidos:', datos);
       let corrientePromedio = 0;
       let corrA = 0, corrB = 0, corrC = 0;
 
@@ -260,7 +268,7 @@ function fetchLiveData() {
       colorearCorrientes(datos, corrC, 'C', corrientePromedio);
 
 
-      setTimeout(fetchLiveData, 30000);
+      setTimeout(fetchLiveData, 10000);
     })
     .catch(error => console.error('Fetch error:', error));
 
@@ -316,15 +324,18 @@ window.addEventListener('load', async () => {
     if (datos['A']) {
       datosA = procesarDatos(datos['A']);
       console.log(datosA);
+      lastDate["A"] = datosA.seriesVoltajes[datosA.seriesVoltajes.length - 1][0];
     }
     if (datos['B']) {
       datosB = procesarDatos(datos['B']);
       console.log(datosB);
+      lastDate["B"] = datosB.seriesVoltajes[datosB.seriesVoltajes.length - 1][0];
 
     }
     if (datos['C']) {
       datosC = procesarDatos(datos['C']);
       console.log(datosC);
+      lastDate["C"] = datosC.seriesVoltajes[datosC.seriesVoltajes.length - 1][0];
     }
 
     chartA = crearGrafica('grafica-a', 'Fase A', datosA);
