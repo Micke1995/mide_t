@@ -67,6 +67,11 @@ def crea_Sistema_medicion(request):
             longitud=longitud,
             qr = generate_qr_code()
         )
+        fases = ['A', 'B', 'C']
+
+        for fase_nombre in fases:
+            Fase.objects.create(Sistema=sistema, nombre=fase_nombre)
+
 
         return JsonResponse({
             "mensaje": f"Se creó el sistema '{nombre}' correctamente.",
@@ -184,7 +189,7 @@ def get_lecturas_historia(request):
     sis_name = request.GET.get('sistema')
     sistema = SistemaMedicion.objects.get(nombre=sis_name)
 
-    fases = ['A', 'B', 'C', 'N']
+    fases = ['A', 'B', 'C']
     lecturas_historial = {}
 
     for nombre_fase in fases:
