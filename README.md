@@ -4,12 +4,15 @@ A simple Django-based web service designed to receive and store measurement samp
 
 ### Comandos utiles
 
+```bash
 sudo systemctl reload nginx
 sudo systemctl restart nginx
 sudo systemctl status nginx
-
+```
+```bash
 sudo systemctl restart gunicorn
 sudo systemctl status gunicorn
+```
 
 ## Configuracion de IIS
 https://adrianjnkns.medium.com/django-on-iis-b33574dbd510
