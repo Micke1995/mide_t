@@ -1,7 +1,7 @@
 from django.db import models
 
-
 class SistemaMedicion(models.Model):
+    qr = models.CharField(max_length=50, unique=True, null=True, blank=True)
     nombre = models.CharField(max_length=100)
     ubicacion = models.CharField(max_length=255, blank=True)
     descripcion = models.TextField(blank=True)
@@ -35,10 +35,11 @@ class Lecturas(models.Model):
     fase = models.ForeignKey(Fase, on_delete=models.CASCADE, related_name='Lecturas')
     tiempo = models.DateTimeField(db_index=True)
 
-    voltaje = models.FloatField()
-    corriente = models.FloatField()
-    angulo = models.FloatField()
+    voltaje = models.FloatField(null=True, blank=True)
+    corriente = models.FloatField(null=True, blank=True)
+    angulo = models.FloatField(null=True, blank=True)
     kwh = models.FloatField(null=True, blank=True)
+    kw = models.FloatField(null=True, blank=True)
 
     class Meta:
         indexes = [

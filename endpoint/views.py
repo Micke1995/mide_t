@@ -3,6 +3,8 @@ from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+
+from endpoint.functions import generate_qr_code
 from .models import *
 import datetime
 from django.utils.timezone import make_aware
@@ -30,6 +32,13 @@ def recibe_datos_medicion(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def crea_Sistema_medicion(request):
+
+    # actualiza los qr code de los sistemas de medicion
+    # rename_files = SistemaMedicion.objects.all()
+    # for v in rename_files:
+    #     v.qr= generate_qr_code(id=v.id)
+    #     v.save()
+
     try:
         data = json.loads(request.body)
 
@@ -39,8 +48,8 @@ def crea_Sistema_medicion(request):
         latitud = data.get('latitud')
         longitud = data.get('longitud')
 
-        # if not nombre:
-        #     return JsonResponse({"error": "El campo 'nombre' es obligatorio."}, status=400)
+        if not nombre:
+            return JsonResponse({"error": "El campo 'nombre' es obligatorio."}, status=400)
 
         # if latitud is None or longitud is None:
         #     return JsonResponse({"error": "Los campos 'latitud' y 'longitud' son obligatorios."}, status=400)
@@ -56,6 +65,7 @@ def crea_Sistema_medicion(request):
             descripcion=descripcion,
             latitud=latitud,
             longitud=longitud,
+            qr = generate_qr_code()
         )
 
         return JsonResponse({
