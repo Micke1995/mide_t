@@ -12,5 +12,6 @@ def index(request):
     except SistemaMedicion.DoesNotExist:
         return JsonResponse({"error": f"Sistema '{sis_name}' no encontrado"}, status=404)
 
+
     context = {'sistema':sistema}
     return render(request, f'views/inicio.html',context)
