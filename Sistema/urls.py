@@ -18,7 +18,7 @@ Including another URLconf
 from django.urls import include,path
 
 urlpatterns = [
-    path("", include("libreria.urls")),
+    path("views/", include("libreria.urls")),
     path("api/", include("endpoint.urls")),
-    path("webhook/", include("webhook.urls")),
+    path("", include("webhook.urls")),
 ]
