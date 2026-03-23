@@ -1,0 +1,71 @@
+Microsoft Windows [Versión 6.0.6003]
+Copyright (c) 2006 Microsoft Corporation.  Reservados todos los derechos.
+
+C:\Users\Administrador>netstat -ano
+
+Conexiones activas
+
+  Proto  Dirección local          Dirección remota        Estado           PID
+  TCP    0.0.0.0:21             0.0.0.0:0              LISTENING       1792
+  TCP    0.0.0.0:80             0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       844
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:1433           0.0.0.0:0              LISTENING       1836
+  TCP    0.0.0.0:3389           0.0.0.0:0              LISTENING       1152
+  TCP    0.0.0.0:5357           0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:5800           0.0.0.0:0              LISTENING       2456
+  TCP    0.0.0.0:5900           0.0.0.0:0              LISTENING       2456
+  TCP    0.0.0.0:8001           0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:47001          0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:49152          0.0.0.0:0              LISTENING       532
+  TCP    0.0.0.0:49153          0.0.0.0:0              LISTENING       932
+  TCP    0.0.0.0:49154          0.0.0.0:0              LISTENING       992
+  TCP    0.0.0.0:49155          0.0.0.0:0              LISTENING       620
+  TCP    0.0.0.0:49162          0.0.0.0:0              LISTENING       328
+  TCP    0.0.0.0:49178          0.0.0.0:0              LISTENING       608
+  TCP    0.0.0.0:49180          0.0.0.0:0              LISTENING       1792
+  TCP    10.8.171.158:139       0.0.0.0:0              LISTENING       4
+  TCP    10.8.171.158:3389      10.8.6.109:53632       ESTABLISHED     1152
+  TCP    10.8.171.158:49572     10.5.248.91:3389       ESTABLISHED     3400
+  TCP    10.8.171.158:51612     10.7.232.98:3389       ESTABLISHED     4844
+  TCP    10.8.171.158:52508     10.4.8.168:80          ESTABLISHED     9676
+  TCP    10.8.171.158:53826     10.4.13.10:55635       TIME_WAIT       0
+  TCP    10.8.171.158:53828     10.4.13.10:55636       TIME_WAIT       0
+  TCP    10.8.171.158:53830     10.4.13.10:55637       TIME_WAIT       0
+  TCP    10.8.171.158:53832     10.4.13.10:55638       TIME_WAIT       0
+  TCP    10.8.171.158:60744     10.80.152.7:3389       ESTABLISHED     6812
+  TCP    127.0.0.1:1434         0.0.0.0:0              LISTENING       1836
+  TCP    [::]:80                [::]:0                 LISTENING       4
+  TCP    [::]:135               [::]:0                 LISTENING       844
+  TCP    [::]:445               [::]:0                 LISTENING       4
+  TCP    [::]:1433              [::]:0                 LISTENING       1836
+  TCP    [::]:3389              [::]:0                 LISTENING       1152
+  TCP    [::]:5357              [::]:0                 LISTENING       4
+  TCP    [::]:8001              [::]:0                 LISTENING       4
+  TCP    [::]:47001             [::]:0                 LISTENING       4
+  TCP    [::]:49152             [::]:0                 LISTENING       532
+  TCP    [::]:49153             [::]:0                 LISTENING       932
+  TCP    [::]:49154             [::]:0                 LISTENING       992
+  TCP    [::]:49155             [::]:0                 LISTENING       620
+  TCP    [::]:49162             [::]:0                 LISTENING       328
+  TCP    [::]:49178             [::]:0                 LISTENING       608
+  TCP    [::]:49180             [::]:0                 LISTENING       1792
+  TCP    [::1]:1434             [::]:0                 LISTENING       1836
+  UDP    0.0.0.0:123            *:*                                    1068
+  UDP    0.0.0.0:500            *:*                                    992
+  UDP    0.0.0.0:3456           *:*                                    1792
+  UDP    0.0.0.0:3702           *:*                                    1068
+  UDP    0.0.0.0:3702           *:*                                    1068
+  UDP    0.0.0.0:4500           *:*                                    992
+  UDP    0.0.0.0:5355           *:*                                    1152
+  UDP    0.0.0.0:50842          *:*                                    1068
+  UDP    10.8.171.158:137       *:*                                    4
+  UDP    10.8.171.158:138       *:*                                    4
+  UDP    127.0.0.1:3456         *:*                                    1792
+  UDP    [::]:123               *:*                                    1068
+  UDP    [::]:500               *:*                                    992
+  UDP    [::]:3702              *:*                                    1068
+  UDP    [::]:3702              *:*                                    1068
+  UDP    [::]:50843             *:*                                    1068
+
+C:\Users\Administrador>

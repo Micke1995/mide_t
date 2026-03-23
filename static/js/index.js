@@ -345,3 +345,30 @@ window.addEventListener('load', async () => {
 
   });
 });
+
+
+// function postDatos() {
+//   const arrFases = ["A", "B", "C"]
+//   arrFases.forEach(async (fase) => {
+//     const obj = {
+//       "sistema": "Zona Morelia Centro",
+//       "fase": fase,
+//       "voltaje": 130 + Math.random() * .5,
+//       "corriente": 1 + Math.random() * .5,
+//       "angulo": 0.99 + Math.random() * .5,
+//       "kwh": 127.5 + Math.random() * .5
+//     }
+//     const url = "http://34.136.90.40/api/lectura_nueva/"
+//     const response = await fetch(url, {
+//       method: 'POST', // *Method* can be 'GET', 'POST', 'PUT', 'DELETE', etc.
+//       headers: {
+//         'Content-Type': 'application/json', // *Content-Type* is typically 'application/json' for JSON data
+//       },
+//       body: JSON.stringify(obj), // *body* must match the Content-Type header
+//     });
+//     const resData = await response.json()
+//     console.log('Success:', resData);
+//   })
+// }
+
+// const intervalId = setInterval(postDatos, 30000);
