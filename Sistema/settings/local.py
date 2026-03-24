@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "libreria",
     "webhook",
     "bootstrap5",
+    'django_bootstrap_icons',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

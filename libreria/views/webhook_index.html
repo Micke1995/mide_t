@@ -8,6 +8,7 @@
   {% load bootstrap5 %}
   {% bootstrap_css %}
   {% bootstrap_javascript %}
+  {% load bootstrap_icons %}
   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
   <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}" />
   <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
@@ -50,17 +51,19 @@
       <img src="/static/img/ladetec.png" alt="LADETEC LOGO" class="img-fluid my-5">
       <p class="text-dark">
         <a href="https://maps.app.goo.gl/1Hfpdj1RPvBXmkbZ9" class="btn text-dark">
-          <i class="bi bi-geo-alt"></i> Calz. Ventura Puente 1653, Electricistas, 58290 Morelia, Mich
+
+        {% bs_icon 'geo-alt' %}  Calz. Ventura Puente 1653, Electricistas, 58290 Morelia, Mich
         </a>
         <br>
-        <i class="bi bi-person-badge"></i> Jefe de Laboratorio: Miguel Ángel Juárez Solís
+        {% bs_icon 'person-badge' %} Jefe de Laboratorio: Miguel Ángel Juárez Solís
         <br>
-        <i class="bi bi-hdd-network"></i> Backend Dev: Miguel Gabriel Juárez Jimenez
+
+        {% bs_icon 'database' %} Backend : Miguel Gabriel Juárez Jimenez
         <br>
-        <i class="bi bi-code-slash"></i> Fronted Dev: Daniel Castro Pineda
+        {% bs_icon 'code-slash' %} Fronted : Daniel Castro Pineda
         <br>
         <a href="tel:4433225200, 25444 " class="btn text-dark">
-          <i class="bi bi-telephone"></i> 443 322 5200 Ext 25444
+          {% bs_icon 'telephone' %} 443 322 5200 Ext 25444
         </a>
       </p>
     </div>
@@ -71,7 +74,6 @@
   </script>
   <script src="{% static 'js/three.min.js'%}"></script>
   <script src="{% static 'js/webhook_index.js'%}"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
   <script>
     let scene, camera, renderer, stars, starGeo;
 

@@ -6,7 +6,7 @@ import datetime
 from django.utils.timezone import make_aware
 from django.shortcuts import render
 from .models import HistoricWebhook
-import pandas as pd
+# import pandas as pd
 
 GLOBAL_TOKEN = "9BlIIYdRPhHZsQHiADfpc3113AtTj2WCBK1kGDqJiR7YqmpfTgFZ7RkQu7rwS8LK"
 MAX_BODY_SIZE = 10000
