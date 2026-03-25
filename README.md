@@ -14,5 +14,17 @@ sudo systemctl restart gunicorn
 sudo systemctl status gunicorn
 ```
 
+
+## Certbot
+```bash
+sudo certbot --nginx
+```
+
+
+(ref: /etc/letsencrypt/renewal/34.136.90.40.conf)
+
+
 ## Configuracion de IIS
 https://adrianjnkns.medium.com/django-on-iis-b33574dbd510
+
+
